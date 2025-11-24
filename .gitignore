@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Entornos
+.venv/
+Pipfile.lock
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Modelos y datos generados
+*.pkl
+*.joblib
+
+# VS Code
+.vscode/
