@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portafolio | Sorel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="nav">
+    <div class="logo">Dev Sorel.</div>
+    <nav>
+      <a href="#home">Inicio</a>
+      <a href="#about">Sobre Mí</a>
+      <a href="#projects">Proyectos</a>
+      <a href="#contact">Contacto</a>
+    </nav>
+    <div class="social">
+      <a href="https://linkedin.com/in/tuusuario" target="_blank">LinkedIn</a>
+      <a href="https://github.com/tuusuario"       target="_blank">GitHub</a>
+      <a href="https://wa.me/123456789"             target="_blank">WhatsApp</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="hero">
+    <div class="hero-text">
+      <h1>Hola, soy <span>Ingeniero en Sistemas</span></h1>
+      <p>Desarrollador Web &amp; Data Scientist</p>
+      <div class="hero-buttons">
+        <a href="Sorel_CV.pdf" download class="btn">Descargar CV</a>
+        <a href="#contact" class="btn btn-outline">Contáctame</a>
+      </div>
+      <div class="hero-social-sm">
+        <a href="https://instagram.com/tuusuario" target="_blank">IG</a>
+        <a href="https://tiktok.com/@tuusuario"   target="_blank">TT</a>
+        <a href="mailto:tucorreo@gmail.com"       target="_blank">✉️</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <div class="rings">
+        <div class="ring ring1"><span class="ring-label">Python</span></div>
+        <div class="ring ring2"><span class="ring-label">Power BI</span></div>
+        <div class="ring ring3"><span class="ring-label">TensorFlow</span></div>
+      </div>
+      <img class="static-photo" src="sorel.jpeg" alt="Foto de Sorel">
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section about">
+    <h2>Sobre Mí</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>¿Quién Soy?</h3>
+        <p>Ingeniero en Sistemas apasionado por crear soluciones web y de datos.</p>
+      </div>
+      <div class="card">
+        <h3>Objetivo</h3>
+        <p>Aplicar ML y desarrollo full‑stack para resolver retos reales.</p>
+      </div>
+      <div class="card">
+        <h3>Perfil</h3>
+        <p>Orientado a detalle, comprometido con calidad y experiencia UX.</p>
+      </div>
+    </div>
+    <h3 class="skills-title">Habilidades Técnicas</h3>
+    <div class="skills">
+      <span>Python</span>
+      <span>JavaScript</span>
+      <span>HTML</span>
+      <span>CSS</span>
+      <span>React</span>
+      <span>Node.js</span>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="section projects">
+    <h2>Proyectos</h2>
+    <div class="projects-grid">
+      <div class="proj-card">
+        <h4>Control SICT</h4>
+        <p>Sistema de gestión de licencias nacionales e internacionales.</p>
+        <a href="#" class="link">Ver más →</a>
+      </div>
+      <div class="proj-card">
+        <h4>Portafolio Personal</h4>
+        <p>Mi presentación online con efectos orbitantes y formulario.</p>
+        <a href="#" class="link">Ver más →</a>
+      </div>
+      <div class="proj-card">
+        <h4>Mueblería Cabañas</h4>
+        <p>Tienda web con catálogo dinámico y WhatsApp.</p>
+        <a href="#" class="link">Ver más →</a>
+      </div>
+      <div class="proj-card">
+        <h4>Microservicios & Front</h4>
+        <p>API REST con Spring Boot + SPA React.</p>
+        <a href="#" class="link">Ver más →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section contact">
+    <h2>Trabajemos Juntos</h2>
+    <form class="contact-form">
+      <input type="text" placeholder="Nombre" required>
+      <input type="email" placeholder="Email" required>
+      <textarea placeholder="Mensaje..." rows="4" required></textarea>
+      <button type="submit" class="btn">Enviar Mensaje</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 Sorel. Todos los derechos reservados.
+  </footer>
+
+</body>
+</html>
