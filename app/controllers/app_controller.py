@@ -3,7 +3,7 @@ import pandas as pd
 import json
 from datetime import datetime
 
-# Importaciones MVC
+# MVC Imports
 from app.models.data_service import DataService
 from app.models.ml_service import MLService
 from app.models.db_service import DBService
@@ -43,7 +43,7 @@ class AppController:
         if st.session_state.df is not None:
             self.upload_view.render_data_preview(st.session_state.df)
 
-    # --- DASHBOARD (ACTUALIZADO) ---
+    # --- DASHBOARD (ACTUALIZADO CON FILTROS) ---
     def run_dashboard(self):
         df = st.session_state.df
         if df is None:
@@ -51,15 +51,15 @@ class AppController:
             return
         
         # 1. Capturamos DataFrame filtrado Y nivel de agrupación
+        # Esto permite que los selectores de la barra lateral afecten a los gráficos
         df_filtered, agg_level = self.dashboard_view.render_sidebar_filters(df)
         
         if df_filtered.empty:
-            st.warning("⚠️ No hay datos con los filtros actuales.")
+            st.warning("⚠️ No hay datos con los filtros actuales. Intenta ampliar el rango de fechas.")
             return
 
         # 2. Renderizamos usando esos parámetros
         self.dashboard_view.render_kpis(df_filtered)
-        # Pasamos agg_level para que el gráfico de evolución cambie (Diario/Mensual...)
         self.dashboard_view.render_all_charts(df_filtered, agg_level)
 
     # --- PREDICCIÓN ---
@@ -72,53 +72,63 @@ class AppController:
         self.pred_view.render_header()
         
         try:
+            # 1. Preparar datos históricos
             agg_hist = self.ml_service.prepare_historical_data(df)
-            mae, rmse, r2 = self.ml_service.evaluate_model(agg_hist)
+            
+            # 2. Obtener métricas Y Datos de Validación (Test Set)
+            # Esto es clave para el gráfico de "Prueba y Error"
+            mae, rmse, r2, val_df = self.ml_service.evaluate_model(agg_hist)
+            
             self.pred_view.render_metrics_test(mae, rmse, r2)
             
-            future_2025 = self.ml_service.predict_2025(agg_hist)
+            # 3. Generar Forecast 2025
+            future = self.ml_service.predict_2025(agg_hist)
             
-            if future_2025 is not None:
-                self.pred_view.render_forecast_chart(agg_hist, future_2025)
+            if future is not None:
+                # Pasamos las 3 piezas al gráfico: Historia, Validación y Futuro
+                self.pred_view.render_forecast_chart(agg_hist, val_df, future)
                 
+                # Guardado en BD
                 save, name, desc = self.pred_view.render_save_form()
                 if save:
                     user = st.session_state.get("username", "Admin")
                     now = datetime.now().isoformat()
                     params = json.dumps({'modelo': 'brutos_v1', 'fecha': now})
+                    
                     self.db_service.save_prediction_report(
                         user, now, name, "Predicción", "pred_2025.csv", params, desc
                     )
-                    toast("Guardado exitosamente", "💾")
+                    toast("Reporte guardado exitosamente", "💾")
             else:
-                st.error("Error generando predicción.")
+                st.error("Error al generar la proyección futura.")
                 
         except Exception as e:
-            st.error(f"Error en predicción: {e}")
+            st.error(f"Error en módulo de predicción: {e}")
 
     # --- ESTRATEGIA ---
     def run_strategy(self):
         df = st.session_state.df
         if df is None:
-            st.warning("⚠️ Carga datos para usar Estrategia.")
+            st.warning("⚠️ Carga datos primero.")
             return
 
-        tab1, tab2, tab3 = self.strategy_view.render_tabs()
-
-        with tab1: # Markov
-            matrix = self.ml_service.get_transition_matrix(df)
-            if not matrix.empty:
-                self.strategy_view.render_markov_scenario(matrix)
+        # Renderizar Tabs
+        t1, t2, t3 = self.strategy_view.render_tabs()
+        
+        with t1: # Markov
+            mat = self.ml_service.get_transition_matrix(df)
+            if not mat.empty:
+                self.strategy_view.render_markov_scenario(mat)
             else:
-                st.warning("Faltan datos de transición.")
-
-        with tab2: # Riesgo
+                st.warning("Faltan datos históricos para calcular transiciones.")
+            
+        with t2: # Riesgo
             risk = self.ml_service.calculate_risk_var(df)
             if risk:
                 self.strategy_view.render_risk_scenario(risk)
             else:
-                st.warning("Faltan datos de riesgo.")
-
-        with tab3: # Segmentación
-            segs = self.ml_service.get_demographic_segments(df)
-            self.strategy_view.render_segmentation_scenario(segs)
+                st.warning("Faltan datos para análisis de riesgo.")
+            
+        with t3: # Segmentación
+            seg = self.ml_service.get_demographic_segments(df)
+            self.strategy_view.render_segmentation_scenario(seg)
