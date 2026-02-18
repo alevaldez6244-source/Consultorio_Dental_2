@@ -19,11 +19,16 @@ try:
     import app.config as config
     from app.controllers.auth_controller import AuthController
     from app.controllers.app_controller import AppController
+    # NUEVO: Importamos los estilos aquí
+    from app.views.styles import load_css 
 except ImportError as e:
     st.error(f"❌ Error Crítico de Importación: {e}")
     st.stop()
 
 def main():
+    # NUEVO: Activamos los estilos visuales al inicio
+    load_css()
+
     # GESTIÓN DE SEGURIDAD
     auth = AuthController()
     if not auth.manage_auth():
